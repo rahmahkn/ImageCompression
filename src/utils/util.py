@@ -1,18 +1,14 @@
-import math, time
+import timeit, os
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-from numpy.lib.npyio import save
-
-# Function to convert percentage to number of vectors
-def percentToNb(percent, w, h):
-    return int(math.ceil((percent * w * h * 0.01) / (w + h + 1)))
 
 # Function to save image with certain name
 def saveImage(arr, name):
-    filename = '../out/' + name + '_compressed.jpg'
+    filename = '..\out\compressed.jpg'
+    img = Image.fromarray(arr).convert('RGB').save(filename)
 
-    return Image.fromarray(arr).save(filename)
+    return img
 
 # Function to convert image to matrix
 def imageToMatrix(img):
@@ -33,23 +29,39 @@ def constructImage(matrix, nbVector):
 # Function to do whole compression until saving the image
 def compressImageSVD():
     try:
-        imgPath = "r" + input("Input file path: ")
+        # Getting file path
+        imgPath = input("Input file path: ")
+
+        startTime = timeit.default_timer()
+        startSize = os.stat(imgPath).st_size
+
         img = Image.open(imgPath)
-        filename = img.filename[:len(filename)-3]
+
+        # Getting filename
+        # list_filename = (img.filename[:len(img.filename)-4]).split('\\')
+        # filename = list_filename.pop()
+        # print(filename)
     except:
         print("File path not found!")
         compressImageSVD()
     finally:
         # Getting detail of compression
-        percent = int(input("Compress image percentage: "))
-        nbVector = percentToNb(percent, img.size[0], img.size[1])
+        print("\nYou can have a compression rate between 1-" + str(min(img.size)))
+        percent = int(input("Compression rate: "))
 
         # Convert image to matrix
-        matrix = imageToMatrix(img, nbVector)
-        compressedMatrix = constructImage(matrix, nbVector)
+        matrix = imageToMatrix(img)
+        compressedMatrix = constructImage(matrix, percent)
 
         # Saving compressed matrix to new image
-        saveImage(compressedMatrix, img.filename)
+        savedImage = saveImage(compressedMatrix, "filename")
+
+        # Getting runtime and compression percentage
+        endTime = timeit.default_timer()
+        endSize = os.stat('../out/compressed.jpg').st_size
+
+        print('\nRuntime program: ' + str(endTime - startTime) + " s")
+        print('Compression percentage: ' + str(endSize * 100 /startSize) + " %")
 
 # Function to show start display
 def showStart():
@@ -77,4 +89,9 @@ def showMenu():
 3. Exit
         '''
     )
+
+# Function to show exit display
+def showExit():
+    print('\nSee you next time!')
+
 # print(percentToNb(3.2, 3900, 2600))
