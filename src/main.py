@@ -1,5 +1,6 @@
-from PIL import Image
 from utils.util import *
+from utils.compressSvd import *
+from utils.compressHuffman import *
 
 def main():
     showStart()
@@ -10,7 +11,7 @@ def main():
         if (menu == 1):
             compressImageSVD()
         elif (menu == 2):
-            print(menu)
+            compressImageHuffman()
         else:
             print("Nomor menu tidak valid!")
 
