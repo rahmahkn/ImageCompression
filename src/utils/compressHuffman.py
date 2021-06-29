@@ -2,6 +2,7 @@ from PIL import Image
 from pathlib import Path
 import numpy as np
 import os, timeit, queue, imageio
+from numpy.matrixlib.defmatrix import matrix
 from scipy.misc import *
 
 
@@ -88,14 +89,34 @@ def imageToPixels(img):
     arrReshaped = arr.reshape(sizeY, sizeX)
     matrix = np.matrix(arrReshaped)
 
+    print("Panjang matrix = " + str(len(matrix)))
+
     return matrix
 
 # Function to encode pixels into huffman code
 def pixelsToCode(pixels, huffmanCodes, filename):
     f = open(filename, 'w')
 
+    print(len(pixels))
+
     for elmt in pixels:
-        f.write(huffmanCodes[str(elmt)])
+        print(elmt)
+
+# Function to check if code is available in huffman code
+def isCodeAvailable(huffmanCodes, code):
+    for value in huffmanCodes.values():
+        if code in value:
+            return True
+    
+    return False
+
+# Function to get key from value
+def getKey(huffmanCodes, value):
+    for key, val in huffmanCodes.items():
+        if val == value:
+            return key
+
+    return None
 
 # Function to decode huffman code into pixels
 def codeToPixels(huffmanCodes, filename):
@@ -103,19 +124,39 @@ def codeToPixels(huffmanCodes, filename):
 
     f = open(filename)
     for line in f:
-        temp = []
-        for char in f:
-            # if temp 
-
-            found = True
-
+        temp = ""
+        for char in line:
+            # If temp is exist in huffman code, add more bit
+            if (isCodeAvailable(huffmanCodes, temp)):
+                # print("Ada" + temp)
+                # print("Ada")
+                # pixels += [int(key) for key, val in huffmanCodes.items() if val == temp[:-1]]
+                temp += char
             
+            else:
+                # print("Tidak ada")
+                # If temp is exist in huffman code, continue reading next char
+                # print("Tidak ada" + temp)
+                
+                print("temp = " + temp)
+                key = getKey(huffmanCodes, temp[:-1])
+                print(key)
+                if key != None:
+                    pixels += [int(key)]
+
+                temp = temp[-1]
+            # temp += char
+
+        # print(temp)
+    print(len(pixels))
+
+    return pixels
 
 # Function to create image from pixels
 def pixelsToImage(pixels, name):
-    array = np.random.random_integers(0, 255, (500, 500, 3))
-    array = np.array(array, dtype=np.uint8)
-    img = Image.fromarray(pixels)
+    # array = np.random.random_integers(0, 255, (500, 500, 3))
+    # array = np.array(array, dtype=np.uint8)
+    img = Image.fromarray(pixels).convert('RGB')
 
     filename = '..\\out\\' + name + '_huffman.jpg'
     img.save(filename)
@@ -131,14 +172,17 @@ def compressImageHuffman():
         # startTime = timeit.default_timer()
         # startSize = os.stat(imgPath).st_size
 
-        # # Getting filename
-        # filename = Path(imgPath).stem
+        # Getting filename
+        filename = Path(imgPath).stem
     except:
         print("File path not found!")
         compressImageHuffman()
     finally:
         img = imageio.imread(imgPath)
         gray_img = rgbToGray(img)
+
+        img2 = Image.open(imgPath)
+        matrix = imageToPixels(img2)
 
         # Compute histogram of pixels
         hist = np.bincount(gray_img.ravel(),minlength=256)
@@ -157,10 +201,14 @@ def compressImageHuffman():
         huffman_traversal(root_node,tmp_array,huffmanCode)		# traverse the tree and write the codes
 
         # Making txt file that save encode precessed picture
-        pixelsToCode(tmp_array, huffmanCode, "codes.txt")
+        pixelsToCode(matrix, huffmanCode, "codes.txt")
 
         # Decode huffman codes from txt file to array of pixels
+        pixels = codeToPixels(huffmanCode, "codes.txt")
+        pixels = np.asarray(pixels)
 
+        # Convert array of pixels to image and save it
+        savedImage = pixelsToImage(pixels, filename)
 
 
 ############################## BATAS CODINGAN ASLI ##############################
