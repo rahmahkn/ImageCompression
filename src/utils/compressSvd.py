@@ -37,13 +37,9 @@ def compressImageSVD():
         startTime = timeit.default_timer()
         startSize = os.stat(imgPath).st_size
 
+        # Getting filename
         img = Image.open(imgPath)
         filename = Path(imgPath).stem
-
-        # Getting filename
-        # list_filename = (img.filename[:len(img.filename)-4]).split('\\')
-        # filename = list_filename.pop()
-        # print(filename)
     except:
         print("File path not found!")
         compressImageSVD()

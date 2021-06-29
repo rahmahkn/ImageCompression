@@ -18,5 +18,7 @@ def main():
         showMenu()
         menu = int(input('\nPilih menu: '))
 
+    showExit()
+
 # Main Program
 main()
