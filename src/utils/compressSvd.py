@@ -1,13 +1,12 @@
 import timeit, os
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
 from pathlib import Path
 
 # Function to save image with certain name
 def saveImageSvd(arr, name):
     filename = '..\\out\\' + name + '_svd.jpg'
-    img = Image.fromarray(arr).convert('RGB').save(filename)
+    img = Image.fromarray(arr).convert('L').save(filename)
 
     return filename
 
@@ -15,7 +14,6 @@ def saveImageSvd(arr, name):
 def imageToMatrix(img):
     sizeX, sizeY = img.size
     arr = np.array(list(img.getdata(band=0)), dtype="uint8")
-    print(len(arr))
     arrReshaped = arr.reshape(sizeY, sizeX)
     matrix = np.matrix(arrReshaped)
 
@@ -61,36 +59,3 @@ def compressImageSVD():
 
         print('\nRuntime program: ' + str(endTime - startTime) + " s")
         print('Compression percentage: ' + str(endSize * 100 /startSize) + " %")
-
-# Function to show start display
-def showStart():
-    print(
-        '''                                       
-                _                                           
-                |_|_____ ___ ___ ___                         
-                | |     | .'| . | -_|                        
-                |_|_|_|_|__,|_  |___|                        
-                            |___|                                                    
-                                        _         
-        ___ ___ _____ ___ ___ ___ ___ ___|_|___ ___ 
-        |  _| . |     | . |  _| -_|_ -|_ -| | . |   |
-        |___|___|_|_|_|  _|_| |___|___|___|_|___|_|_|
-                    |_|                            
-        '''
-    )
-
-# Function to show menu
-def showMenu():
-    print(
-        '''
-1. Compress image with SVD
-2. Compress image with Huffman Coding
-3. Exit
-        '''
-    )
-
-# Function to show exit display
-def showExit():
-    print('\nSee you next time!')
-
-# print(percentToNb(3.2, 3900, 2600))

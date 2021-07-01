@@ -13,7 +13,7 @@ def main():
         elif (menu == '2'):
             compressImageHuffman()
         else:
-            print("Nomor menu tidak valid!")
+            print("\nNomor menu tidak valid!")
 
         showMenu()
         menu = input('\nPilih menu: ')
