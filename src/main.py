@@ -5,18 +5,18 @@ from utils.compressHuffman import *
 def main():
     showStart()
     showMenu()
-    menu = int(input('\nPilih menu: '))
+    menu = input('\nPilih menu: ')
 
-    while (menu != 3):
-        if (menu == 1):
+    while (menu != '3'):
+        if (menu == '1'):
             compressImageSVD()
-        elif (menu == 2):
+        elif (menu == '2'):
             compressImageHuffman()
         else:
             print("Nomor menu tidak valid!")
 
         showMenu()
-        menu = int(input('\nPilih menu: '))
+        menu = input('\nPilih menu: ')
 
     showExit()
 
