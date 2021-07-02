@@ -19,7 +19,7 @@ Algoritma SVD ini sangats sering digunakan dalam bidang *data science* dan pengo
 Matriks **U** dan **V** terdiri atas eigenvector matriks dari **A<sup>T</sup>A** dan **AA<sup>T</sup>** berurutan. Diagonal pada matriks **S** terdiri atas akar dari eigenvalue matriks **A<sup>T</sup>A** atau **AA<sup>T</sup>** (kedua matriks ini memiliki eigenvalue yang sama)
 
 ### Pemanfaatan Rank dalam Kualitas Kompresi Gambar
-Rank dapat digunakan untuk menentukan kualitas kompresi gambar. Algoritma SVD yang melakukan aproksimasi berdasarkan matrix yang telah direduksi menjadi low-rank matrix dengan rank yang digunakan adalah rank terkecil yang paling bisa memberikan hasil terbaik untuk kompresi gambar.
+Rank dapat digunakan untuk menentukan kualitas kompresi gambar. Algoritma SVD melakukan aproksimasi berdasarkan matrix yang telah direduksi menjadi low-rank matrix dengan rank yang digunakan adalah rank terkecil yang paling bisa memberikan hasil terbaik untuk kompresi gambar.
 
 ## Cara Menggunakan Program
 1. Masuk ke folder `src`
