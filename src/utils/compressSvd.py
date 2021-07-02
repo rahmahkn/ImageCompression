@@ -32,9 +32,6 @@ def compressImageSVD():
         # Getting file path
         imgPath = input("Input file path: ")
 
-        startTime = timeit.default_timer()
-        startSize = os.stat(imgPath).st_size
-
         # Getting filename
         img = Image.open(imgPath)
         filename = Path(imgPath).stem
@@ -45,6 +42,12 @@ def compressImageSVD():
         # Getting detail of compression
         print("\nYou can have a compression rate between 1-" + str(min(img.size)))
         percent = int(input("Compression rate: "))
+        while (percent < 1 or percent > min(img.size)):
+            print("\nYour inputted rate is not valid!")
+            percent = int(input("Compression rate: "))
+
+        startTime = timeit.default_timer()
+        startSize = os.stat(imgPath).st_size
 
         # Convert image to matrix
         matrix = imageToMatrix(img)
