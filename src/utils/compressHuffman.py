@@ -1,7 +1,7 @@
 from PIL import Image
 from pathlib import Path
 import numpy as np
-import os, timeit, queue, imageio
+import os, timeit, queue, imageio, math
 from scipy.misc import *
 
 # Class Node to build the tree
@@ -92,6 +92,7 @@ def pixelsToCode(pixels, huffmanCodes, filename):
 
 # Function to decode huffman code into pixels
 def codeToPixels(huffmanCodes, filename):
+    global pixelBefore
     pixels = []
 
     f = open(filename)
@@ -102,11 +103,16 @@ def codeToPixels(huffmanCodes, filename):
         bits = line.split("-")
 
         for bit in bits:
-            # Searching pixel number from bit
-            key = getKey(huffmanCodes, bit)
+            if bit != '':
+                if pixels != []:
+                    # Searching pixel number from bit
+                    key = getKey(pixelBefore, huffmanCodes, bit)
+                else:
+                    key = getKey(-1, huffmanCodes, bit)
+                pixelBefore = key
 
-            if key != None:
-                tempPixels += [int(key)]
+                if key != None:
+                    tempPixels += [int(key)]
 
         pixels += [tempPixels]
 
@@ -131,12 +137,28 @@ def isCodeAvailable(huffmanCodes, code):
     return False
 
 # Function to get key from value
-def getKey(huffmanCodes, value):
+def getKey(pixelBef, huffmanCodes, value):
+    keys = []
+
     for key, val in huffmanCodes.items():
         if val == value:
-            return key
+            if not(key == -1):
+                keys += [key]
+            else:
+                return key
 
-    return None
+    if keys == []:
+        return None
+    else:
+        if pixelBef == None:
+            delta = keys
+        else:
+            delta = [abs(int(pixelBef)-int(key)) for key in keys]
+
+        if delta == []:
+            return 0
+
+        return keys[delta.index(min(delta))]
 
 # Function to do whole huffman compression until saving the image
 def compressImageHuffman():
